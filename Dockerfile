@@ -41,7 +41,10 @@ RUN npm run build
 FROM $NODEJS_IMAGE AS runner
 
 # Required to get the latest, CVE-free dependencies.
-RUN apk update && apk upgrade
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache wget
+
 WORKDIR /app
 
 ENV NODE_OPTIONS="--max-http-header-size=81920 --dns-result-order=ipv4first"
@@ -53,6 +56,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+RUN chown nextjs:nodejs /tmp
 
 
 COPY --from=builder /app/public ./public
