@@ -68,6 +68,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Support for DB migration
 COPY --from=builder --chown=nextjs:nodejs /app/migrate.sh ./migrate.sh
+
+RUN chown -R nextjs:nodejs /app && chmod -R 755 /app
+
 COPY npm npm
 RUN chmod +x migrate.sh
 # mongodb peer dependency would be automatically installed for migrate-mongo
